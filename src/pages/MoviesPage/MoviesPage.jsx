@@ -4,10 +4,12 @@ import MovieList from "../../components/MovieList/MovieList";
 import { useSearchParams } from "react-router-dom";
 
 const MoviesPage = () => {
-  //   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  console.log(searchParams);
+
   const query = searchParams.get("query");
 
   const updateSearchParams = (key, value) => {
@@ -34,7 +36,7 @@ const MoviesPage = () => {
       .then((data) => {
         setMovies(data.results);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
   }, [query]);
 
@@ -44,10 +46,11 @@ const MoviesPage = () => {
         <input type="text" name="query" />
         <button type="submit">Search</button>
       </form>
-      {isLoading && <p>Loading...</p>}
-      {!isLoading && !movies.length && <p>Movie not found</p>}
 
-      {movies.length !== 0 && <MovieList movies={movies} />}
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Something went wrong. Try to reload page.</p>}
+
+      {movies && <MovieList movies={movies} />}
     </>
   );
 };

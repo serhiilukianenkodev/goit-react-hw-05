@@ -6,8 +6,8 @@ import paleceholder from "../../assets/placeholder.svg";
 const MovieDetailsPage = () => {
   const [movieInfo, setMovieInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const location = useLocation();
-  console.log("🚀 ~ MovieDetailsPage ~ location:", location);
 
   const { movieId } = useParams();
   useEffect(() => {
@@ -16,7 +16,7 @@ const MovieDetailsPage = () => {
       .then((data) => {
         setMovieInfo(data);
       })
-      .catch((error) => console.log(error))
+      .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
 
     return () => {};
@@ -25,6 +25,7 @@ const MovieDetailsPage = () => {
   return (
     <>
       {isLoading && <p>Loading...</p>}
+      {error && <p>Something went wrong. Try to reload page.</p>}
       {movieInfo && (
         <section>
           <div>
